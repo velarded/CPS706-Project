@@ -1,4 +1,5 @@
-class Header{
+package DNS;
+public class Header{
     private int id;
     private int flags;
     private int[] counts;
@@ -25,7 +26,12 @@ class Header{
     }
 
     public String toString(){
-        String str = String.format("id: 0x%04X\nflags: 0x%04X\nQDCOUNT: 0x%04X", id, flags, counts[0]);
+        String str = String.format("[id: 0x%04X, " + 
+        "flags: 0x%04X, " +
+        "QDCOUNT: 0x%04X, " + 
+        "ANCOUNT: 0x%04X, " + 
+        "NSCOUNT: 0x%04X, " + 
+        "ARCOUNT: 0x%04X]", id, flags, counts[0], counts[1], counts[2], counts[3]);
         return str;
     }
 }
