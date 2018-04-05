@@ -18,6 +18,7 @@ public class TCPClientHandlerThread implements Runnable{
 	@Override
 	public void run() 
 	{
+		System.out.println("Received TCP request from client!");
 		//Will need to return the response code through the client socket. 
 		
 		//Close socket once finished with servicing the request.

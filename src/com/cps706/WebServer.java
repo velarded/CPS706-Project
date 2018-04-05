@@ -11,7 +11,7 @@ public class WebServer
 		this.webServerPort = webServerPort;
 	}
 	
-	public void createMainThread()
+	public void start()
 	{
 		WebServerMainThread wsmt = new WebServerMainThread();
 		wsmt.run();
@@ -27,7 +27,10 @@ public class WebServer
 				ServerSocket serverSocket = new ServerSocket(webServerPort);
 				while(true)
 				{
+					System.out.println(serverSocket.getLocalSocketAddress());
+					System.out.println("Listening for client sockets on port "+webServerPort+"...");
 					Socket clientSocket = serverSocket.accept();
+					System.out.println("Received client socket!");
 					TCPClientHandlerThread tcht = new TCPClientHandlerThread(clientSocket);
 					tcht.run();						
 				}
