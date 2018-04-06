@@ -1,24 +1,36 @@
 package com.cps706;
 
+import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
+import java.net.URL;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class ClientBrowserMain extends JFrame
 {
 	private JTextField urlField;
+	private JEditorPane editorPane;
 //	private JButton goButton;
 	
-	public ClientBrowserMain()
+	public ClientBrowserMain() throws IOException
 	{
 		super("Client");
 		setSize(500,500);
@@ -39,9 +51,24 @@ public class ClientBrowserMain extends JFrame
 					}
 			}
 		});
-		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		panel.add(urlField);
-		
+		//Setting page display
+		String content = "<head><title>HisCinema</title></head>"
+				+"<body><h1>Videos</h1>"
+				+"<a href=\"http://video.hiscinema.com/F1\">Video 1</a><br>"
+				+"<a href=\"http://video.hiscinema.com/F2\">Video 2</a><br>"
+				+"<a href=\"http://video.hiscinema.com/F3\">Video 3</a><br>"
+				+"<a href=\"http://video.hiscinema.com/F4\">Video 4</a><br>"
+				+"</body>";
+//		editorPane.setPage("http://");
+		editorPane = new JEditorPane();
+		editorPane.setContentType("text/html");
+		editorPane.setEditable(false);
+		editorPane.setPage("http://localhost");
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(panel, BorderLayout.NORTH);
+		getContentPane().add(new JScrollPane(editorPane), BorderLayout.CENTER);	
 	}
 	
 	//Contacts the local DNS using UDP socket
@@ -49,8 +76,8 @@ public class ClientBrowserMain extends JFrame
 	{
 		//Create client UDP socket
 		DatagramSocket clientSocket = new DatagramSocket();
-		//Assuming that url value will be hiscinema.com
-		String url = urlField.getText();
+		//Assuming that url value will be www.hiscinema.com
+		String url = urlField.getText().replace("www.", "");
 		
 		//Uses local ip address
 		InetAddress ipAddr = InetAddress.getLocalHost();
@@ -60,16 +87,36 @@ public class ClientBrowserMain extends JFrame
 		sendData = url.getBytes();
 		DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,ipAddr,MainConfiguration.udpPort());
 		
-		System.out.println("Contacting local DNS using UDP.");
+		System.out.println("Contacting local DNS using UDP to resolve: "+url);
 		clientSocket.send(sendPacket);
 		
+		if(url.equals("hiscinema.com"))
+		{
+			System.out.println("set html");
+			String content = "<head><title>HisCinema</title></head>"
+					+"<body><h1>Videos</h1>"
+					+"<a href=\"http://video.hiscinema.com/F1\">Video 1</a><br>"
+					+"<a href=\"http://video.hiscinema.com/F2\">Video 2</a><br>"
+					+"<a href=\"http://video.hiscinema.com/F3\">Video 3</a><br>"
+					+"<a href=\"http://video.hiscinema.com/F4\">Video 4</a><br>"
+					+"</body>";
+			File indexHTML = new File("index.html");
+			BufferedReader br = new BufferedReader(new FileReader(indexHTML));
+			String line = null;
+			while((line = br.readLine()) != null)
+			{
+				System.out.println(line);
+			}
+			
+			//set page of edit, will be the resolved IP address of hisCinema.
+			editorPane.setPage(new URL("http://localhost"));
+		}
 		//Receives
-		DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
-		
+		//DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 		
 	}
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
 		ClientBrowserMain client = new ClientBrowserMain();
 		client.show();
