@@ -1,13 +1,19 @@
 package DNS;
 public class Record {
-    public static enum Type { A, NS, CNAME, MX };
+    public static enum Type { A, NS, CN, R };
     private Name name;
     private String value;
-    private int type;
+    private Type type;
+
+    public Record(Name name, String value, Type type){
+        this.name = name;
+        this.value = value;
+        this.type = type;
+    }
 
     public Record(DNSParser in, int section){
         name = new Name(in);
-        type = in.read16b();
+        type = Type.values()[in.read16b()];
         if(section != 0)
         {
             int len = in.read16b();
@@ -39,12 +45,12 @@ public class Record {
 		return value;
 	}
 	
-	public int getType()
+	public Type getType()
 	{
 		return type;
 	}
 	
-	public void setType(int type)
+	public void setType(Type type)
 	{
 		this.type = type;
 	}
@@ -54,7 +60,7 @@ public class Record {
         if(value != null){
             str += ", " + value;
         }
-        str += ", " + type + ")";
+        str += ", " + type.toString() + ")";
         return str;
     }
 }

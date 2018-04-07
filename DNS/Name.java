@@ -6,6 +6,15 @@ public class Name{
     public static final int COMPRESSED = 3;
     private List name;
     private int size;
+    
+    public Name(String str){
+        name = new ArrayList<byte[]>();
+        String[] labels = str.split("\\.");
+        for (int i = 0; i < labels.length; i++){
+            name.add(labels[i].getBytes());
+        }
+    }
+
     public Name(DNSParser in){
         name = new ArrayList<byte[]>();
         size = 0;
