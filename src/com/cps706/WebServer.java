@@ -25,10 +25,12 @@ public class WebServer
 			try 
 			{
 				ServerSocket serverSocket = new ServerSocket(webServerPort);
+
+				System.out.println("Listening for client sockets on port "+webServerPort+"...");
 				while(true)
 				{
-					System.out.println(serverSocket.getLocalSocketAddress());
-					System.out.println("Listening for client sockets on port "+webServerPort+"...");
+//					System.out.println(serverSocket.getLocalSocketAddress());
+//					System.out.println("Listening for client sockets on port "+webServerPort+"...");
 					Socket clientSocket = serverSocket.accept();
 					System.out.println("Received client socket!");
 					TCPClientHandlerThread tcht = new TCPClientHandlerThread(clientSocket);

@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.Socket;
 
@@ -23,30 +24,27 @@ public class TCPClientHandlerThread implements Runnable{
 	@Override
 	public void run() 
 	{
-		System.out.println("Received TCP request from client!");
-		//Will need to return the response code through the client socket. 
-		
-		try 
+		try
 		{
-			//Create output stream attacked to socket		
-			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-			//For now initially just send back index.html contents
-			File indexHTML = new File("index.html");
-			BufferedReader br = new BufferedReader(new FileReader(indexHTML));
-			StringBuilder sb = new StringBuilder();
-			String content = null;
-			while((content = br.readLine())!=null)
-			{
-				sb.append(content);
-			}
-			outToServer.writeBytes(sb.toString());
-			//Close socket once finished with servicing the request.
-			clientSocket.close();
+	     DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
+	    File file = new File("index.html");
+	    BufferedReader br = new BufferedReader(new FileReader(file));
+	    String line = null;
+
+	    outToClient.writeBytes("HTTP/1.1 200 OK\n");
+	    outToClient.writeBytes("Content-Type: text/html\n");
+	    outToClient.writeBytes("\r\n");
+	    while((line = br.readLine()) != null)
+	    {
+	    	outToClient.writeBytes(line+"\n");
+	    }
+	    outToClient.flush();
+	    outToClient.close();
+	    clientSocket.close();
 		}
-		catch (Exception e) 
+		catch(Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
 	}
 
