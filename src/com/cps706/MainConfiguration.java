@@ -29,22 +29,22 @@ public class MainConfiguration
 //		}
 	}
 	
-	public static int serverTcpPort() 
+	public static int hisCinemaServerPort() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);
 		Properties properties = new Properties();
-		int serverTcpPort=0;
+		int hisCinemaServerPort=0;
 		try
 		{
 			properties.load(new FileInputStream(configFile));
-			serverTcpPort = Integer.parseInt(properties.getProperty("ServerTcpPort"));
+			hisCinemaServerPort = Integer.parseInt(properties.getProperty("HisCinemaServerPort"));
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		return serverTcpPort;
+		return hisCinemaServerPort;
 	}
 	
 	public static String hisCinemaIP() 
@@ -81,5 +81,23 @@ public class MainConfiguration
 		}
 		
 		return udpPort;
+	}
+	
+	public static int herCinemaServerPort() 
+	{
+		File configFile = new File(CONFIG_FILE_LOCATION);
+		Properties properties = new Properties();
+		int herCinemaServerPort=0;
+		try
+		{
+			properties.load(new FileInputStream(configFile));
+			herCinemaServerPort = Integer.parseInt(properties.getProperty("HerCinemaServerPort"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return herCinemaServerPort;
 	}
 }
