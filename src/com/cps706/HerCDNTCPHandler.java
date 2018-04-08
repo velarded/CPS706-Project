@@ -2,10 +2,10 @@ package com.cps706;
 import java.io.*;
 import java.net.*;
 
-public class HerCinemaTCPHandler implements Runnable
+public class HerCDNTCPHandler implements Runnable
 {
 	private Socket clientSocket;
-	public HerCinemaTCPHandler(Socket clientSocket)
+	public HerCDNTCPHandler(Socket clientSocket)
 	{
 		this.clientSocket = clientSocket;
 	}
@@ -16,12 +16,17 @@ public class HerCinemaTCPHandler implements Runnable
 		try
 		{
 			//Create InputStream from client socket to listen for request.
-			DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+			BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			//Create OutputStream from client socket to send out the selected video file
 			DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+			String line = null;
+			while((line = br.readLine()) != null)
+			{
+				System.out.println(line);
+			}
 			
 			//Close input and output streams
-			dis.close();
+			br.close();
 			dos.close();
 			//Close the client socket
 			clientSocket.close();

@@ -83,21 +83,21 @@ public class MainConfiguration
 		return udpPort;
 	}
 	
-	public static int herCinemaServerPort() 
+	public static int herCDNServerPort() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);
 		Properties properties = new Properties();
-		int herCinemaServerPort=0;
+		int herCDNServerPort=0;
 		try
 		{
 			properties.load(new FileInputStream(configFile));
-			herCinemaServerPort = Integer.parseInt(properties.getProperty("HerCinemaServerPort"));
+			herCDNServerPort = Integer.parseInt(properties.getProperty("HerCDNServerPort"));
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		return herCinemaServerPort;
+		return herCDNServerPort;
 	}
 }

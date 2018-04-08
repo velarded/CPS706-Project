@@ -1,4 +1,4 @@
 HisCinemaServerPort = 40470
 HisCinemaIP = localhost
 UdpPort = 40471
-HerCinemaServerPort = 40472
+HerCDNServerPort = 40472
