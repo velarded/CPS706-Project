@@ -1,6 +1,7 @@
 package com.cps706;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -37,6 +38,8 @@ public class ClientBrowserMain extends JFrame
 		//Make panel
 		JPanel panel = new JPanel();
 		urlField = new JTextField(35);
+		//Button b; b = new Button ("Enter");
+		
 		urlField.addKeyListener(new KeyAdapter()
 		{
 			public void keyReleased(KeyEvent ke)
@@ -51,8 +54,10 @@ public class ClientBrowserMain extends JFrame
 					}
 			}
 		});
+		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		panel.add(urlField);
+		//panel.add(b);
 		//Setting page display
 		String content = "<head><title>HisCinema</title></head>"
 				+"<body><h1>Videos</h1>"
@@ -63,9 +68,13 @@ public class ClientBrowserMain extends JFrame
 				+"</body>";
 //		editorPane.setPage("http://");
 		editorPane = new JEditorPane();
-		editorPane.setContentType("text/html");
 		editorPane.setEditable(false);
-		editorPane.setPage("http://localhost");
+		try{
+			editorPane.setPage("http://localhost");
+		}catch (IOException ex){
+		editorPane.setContentType("text/html");
+		}
+		
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.NORTH);
 		getContentPane().add(new JScrollPane(editorPane), BorderLayout.CENTER);	
@@ -74,13 +83,13 @@ public class ClientBrowserMain extends JFrame
 	//Contacts the local DNS using UDP socket
 	public void goToLocalDNS() throws Exception
 	{
-		//Create client UDP socket
+		//Create client UDP socket 
 		DatagramSocket clientSocket = new DatagramSocket();
 		//Assuming that url value will be www.hiscinema.com
 		String url = urlField.getText().replace("www.", "");
 		
 		//Uses local ip address
-		InetAddress ipAddr = InetAddress.getLocalHost();
+		InetAddress ipAddr = InetAddress.getByName(MainConfiguration.localdnsIP());
 		byte[] sendData = new byte[1024];
 		byte[] receiveData = new byte[1024];
 		
@@ -92,6 +101,18 @@ public class ClientBrowserMain extends JFrame
 		
 		if(url.equals("hiscinema.com"))
 		{
+			//Receives UDP packet
+			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+			clientSocket.receive(receivePacket);
+			
+			//contains IP of hiscinema.com
+			String modifiedSentence = new String(receivePacket.getData());
+			System.out.println("FROM SERVER:" + modifiedSentence);
+			clientSocket.close();
+			
+			Socket TCPclientSocket = new Socket("modifiedSentence", MainConfiguration.hisCinemaServerPort());
+			
+
 			System.out.println("set html");
 			String content = "<head><title>HisCinema</title></head>"
 					+"<body><h1>Videos</h1>"
@@ -111,8 +132,6 @@ public class ClientBrowserMain extends JFrame
 			//set page of edit, will be the resolved IP address of hisCinema.
 			editorPane.setPage(new URL("http://localhost"));
 		}
-		//Receives
-		//DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
 		
 	}
 	
