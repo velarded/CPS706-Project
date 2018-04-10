@@ -38,8 +38,6 @@ public class ClientBrowserMain extends JFrame
 		//Make panel
 		JPanel panel = new JPanel();
 		urlField = new JTextField(35);
-		//Button b; b = new Button ("Enter");
-		
 		urlField.addKeyListener(new KeyAdapter()
 		{
 			public void keyReleased(KeyEvent ke)
@@ -57,7 +55,6 @@ public class ClientBrowserMain extends JFrame
 		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		panel.add(urlField);
-		//panel.add(b);
 		//Setting page display
 		String content = "<head><title>HisCinema</title></head>"
 				+"<body><h1>Videos</h1>"
@@ -66,9 +63,11 @@ public class ClientBrowserMain extends JFrame
 				+"<a href=\"http://video.hiscinema.com/F3\">Video 3</a><br>"
 				+"<a href=\"http://video.hiscinema.com/F4\">Video 4</a><br>"
 				+"</body>";
+
 //		editorPane.setPage("http://");
-		editorPane = new JEditorPane();
+		editorPane = new JEditorPane("text/html", content);
 		editorPane.setEditable(false);
+		panel.add(editorPane);
 		try{
 			editorPane.setPage("http://localhost");
 		}catch (IOException ex){
@@ -113,21 +112,16 @@ public class ClientBrowserMain extends JFrame
 			Socket TCPclientSocket = new Socket("modifiedSentence", MainConfiguration.hisCinemaServerPort());
 			
 
-			System.out.println("set html");
-			String content = "<head><title>HisCinema</title></head>"
-					+"<body><h1>Videos</h1>"
-					+"<a href=\"http://video.hiscinema.com/F1\">Video 1</a><br>"
-					+"<a href=\"http://video.hiscinema.com/F2\">Video 2</a><br>"
-					+"<a href=\"http://video.hiscinema.com/F3\">Video 3</a><br>"
-					+"<a href=\"http://video.hiscinema.com/F4\">Video 4</a><br>"
-					+"</body>";
-			File indexHTML = new File("index.html");
-			BufferedReader br = new BufferedReader(new FileReader(indexHTML));
-			String line = null;
-			while((line = br.readLine()) != null)
-			{
-				System.out.println(line);
-			}
+
+//			editorPane.setPage("http://");
+			/*editorPane = new JEditorPane("text/html", content);
+			editorPane.setEditable(false);
+			panel.add(editorPane);
+			try{
+				editorPane.setPage("http://localhost");
+			}catch (IOException ex){
+			editorPane.setContentType("text/html");
+			}*/
 			
 			//set page of edit, will be the resolved IP address of hisCinema.
 			editorPane.setPage(new URL("http://localhost"));
