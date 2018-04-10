@@ -83,21 +83,39 @@ public class MainConfiguration
 		return udpPort;
 	}
 	
-	public static int herCDNServerPort() 
+	public static int herCinemaServerPort() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);
 		Properties properties = new Properties();
-		int herCDNServerPort=0;
+		int herCinemaServerPort=0;
 		try
 		{
 			properties.load(new FileInputStream(configFile));
-			herCDNServerPort = Integer.parseInt(properties.getProperty("HerCDNServerPort"));
+			herCinemaServerPort = Integer.parseInt(properties.getProperty("HerCinemaServerPort"));
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		return herCDNServerPort;
+		return herCinemaServerPort;
+	}
+	
+	public static String localdnsIP() 
+	{
+		File configFile = new File(CONFIG_FILE_LOCATION);
+		Properties properties = new Properties();
+		String localdns="";
+		try
+		{
+			properties.load(new FileInputStream(configFile));
+			localdns =properties.getProperty("localdnsIP ");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return localdns;
 	}
 }
