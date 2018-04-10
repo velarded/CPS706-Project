@@ -1,6 +1,5 @@
 package DNS;
 public class Record {
-    public static enum Type { A, NS, CN, R };
     private Name name;
     private String value;
     private Type type;
@@ -13,7 +12,7 @@ public class Record {
 
     public Record(DNSParser in, int section){
         name = new Name(in);
-        type = Type.values()[in.read16b()];
+        type = Type.fromInt(in.read16b());
         if(section != 0)
         {
             int len = in.read16b();
