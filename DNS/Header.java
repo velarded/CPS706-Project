@@ -30,6 +30,14 @@ public class Header{
         return counts;
     }
 
+    public int getCount(int field){
+        return counts[field];
+    }
+
+    public void incCount(int field){
+        counts[field]++;
+    }
+
     public void resetFlags(){
         flags = 0x0000;
     }
