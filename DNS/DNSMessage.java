@@ -6,7 +6,13 @@ public class DNSMessage{
     private DNSParser parser;
     private Header header;
     private List[] sections;
-    
+
+    public DNSMessage(Header header){
+        parser = null;
+        this.header = header;
+        sections = new ArrayList[4];
+    }
+
     public DNSMessage(byte[] data){
         parser = new DNSParser(data);
         header = new Header(parser);
@@ -26,6 +32,13 @@ public class DNSMessage{
 
     public Header getHeader(){
         return header;
+    }
+
+    public Record getQuestion(){
+        if(!sections[0].isEmpty()){
+            return sections[0].get(0);
+        }
+        return null;
     }
 
     public String toString(){

@@ -4,6 +4,11 @@ public class Header{
     private int flags;
     private int[] counts;
 
+    public Header(int id){
+        this.id = id;
+        resetFlags();
+        resetCounts();
+    }
     public Header(DNSParser in){
         id = in.read16b();
         flags = in.read16b();
@@ -23,6 +28,16 @@ public class Header{
 
     public int[] getCounts(){
         return counts;
+    }
+
+    public void resetFlags(){
+        flags = 0x0000;
+    }
+
+    public void resetCounts(){
+        for(int i = 0; i < 4; i++){
+            counts[i] = 0;
+        }
     }
 
     public String toString(){
