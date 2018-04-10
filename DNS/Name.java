@@ -15,6 +15,10 @@ public class Name{
         }
     }
 
+    public Name(List labels){
+        name = labels;
+    }
+
     public Name(DNSParser in){
         name = new ArrayList<byte[]>();
         size = 0;
@@ -39,6 +43,33 @@ public class Name{
         in.restore();
     }
 
+    public int labels(){
+        return name.size();
+    }
+
+    public List getLabels(){
+        return name;
+    }
+
+    public Name offset(int offset){
+        List<byte[]> temp = new ArrayList<byte[]>(name);
+        temp.subList(0, offset-1).clear();
+        return new Name(temp);
+    }
+
+    public boolean equals(Name n){
+        List name2 = n.getLabels();
+        if(name2.size() == name.size()){
+            for(int i = 0; i < name2.size(); i++){
+                if(!Arrays.equals((byte[])name.get(i), (byte[])name2.get(i))){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public String toString(){
         String str = "";
         for(int i = 0; i < name.size(); i++){
@@ -49,4 +80,5 @@ public class Name{
         }
         return str;
     }
+    
 }
