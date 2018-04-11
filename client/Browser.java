@@ -12,7 +12,7 @@ public class Browser extends JFrame{
 
     public Browser(){
 
-        urlField = new JTextField("HELLO WORLD", 35);
+        urlField = new JTextField(35);
         editorPane = new JEditorPane();
         editorPane.setContentType("text/html");
         editorPane.setEditable(false);
