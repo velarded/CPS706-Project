@@ -2,6 +2,7 @@ package client;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JFrame;
 
@@ -26,7 +27,15 @@ public class Main{
     
     public void playVideo() throws IOException{
     	
+    	
     	Desktop.getDesktop().open(new File ("F1.mp4"));
     	
     }
+    
+    public void getVid(URL url){
+    	String vidPath = url.getFile();
+    }
+    
+   
+    
 }
