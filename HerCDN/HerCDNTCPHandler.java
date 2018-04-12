@@ -1,4 +1,4 @@
-package com.cps706;
+package HerCDN;
 import java.io.*;
 import java.net.*;
 

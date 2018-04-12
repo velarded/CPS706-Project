@@ -1,4 +1,3 @@
-package com.cps706;
 import java.net.*;
 import java.io.*;
 
