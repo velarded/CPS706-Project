@@ -1,4 +1,5 @@
 package DNS;
+import java.nio.ByteBuffer;
 public class Record {
     private Name name;
     private String value;
@@ -20,6 +21,9 @@ public class Record {
             in.getByteArray(tmp, 0, len);
             value = new String(tmp);
             System.out.println(value);
+        }
+        else{
+            value = "";
         }
         
     }
@@ -52,7 +56,22 @@ public class Record {
 	public void setType(Type type)
 	{
 		this.type = type;
-	}
+    }
+    
+    public byte[] toByteArray(){
+        ByteBuffer buf = ByteBuffer.allocate(1024);
+        buf.put(name.toByteArray());
+        buf.putShort((short) type.toInt());
+        if(!value.isEmpty()){
+            byte[] rdata = value.getBytes();
+            buf.putShort((short)rdata.length);
+            buf.put(rdata);
+        }
+        byte[] array = new byte[buf.position()];
+        buf.position(0);
+        buf.get(array);
+        return array;
+    }
 
     public String toString(){
         String str = "(" + name.toString();

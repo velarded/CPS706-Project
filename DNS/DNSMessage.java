@@ -2,6 +2,7 @@ package DNS;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.ByteBuffer;
 public class DNSMessage{
     private DNSParser parser;
     private Header header;
@@ -51,15 +52,45 @@ public class DNSMessage{
         return null;
     }
 
-    public List getAuthorities(){
-        return sections[2];
-    }   
+    public List getRecords(int field){
+        return sections[field];
+    }
+
+    public boolean hasAnswer(Type type){
+        List<Record> ANRecords = sections[1];
+        for (int i = 0; i < ANRecords.size(); i++){
+            Record record = ANRecords.get(i);
+            if(record.getType() == type){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void addRecord(Record record, int field){
         header.incCount(field);
         sections[field].add(record);
     }
 
+    public void addRecords(List records, int field){
+        sections[field].addAll(records);
+    }
+
+    public byte[] toByteArray(){
+        ByteBuffer buf = ByteBuffer.allocate(1024);
+        buf.put(header.toByteArray());
+        for ( int i = 0; i < 4; i++){
+            List<Record> section = sections[i];
+            
+            for(int j = 0; j < section.size(); j++){
+                buf.put(section.get(j).toByteArray());
+            }
+        }
+        byte[] array = new byte[buf.position()];
+        buf.position(0);
+        buf.get(array);
+        return array;
+    }
     public String toString(){
         String str = "HEADER = ";
         str += header.toString() + "\n";

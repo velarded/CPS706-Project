@@ -1,4 +1,5 @@
 package DNS;
+import java.nio.ByteBuffer;
 public class Header{
     private int id;
     private int flags;
@@ -46,6 +47,19 @@ public class Header{
         for(int i = 0; i < 4; i++){
             counts[i] = 0;
         }
+    }
+
+    public byte[] toByteArray(){
+        ByteBuffer buf = ByteBuffer.allocate(12);
+        buf.putShort((short)id);
+        buf.putShort((short)flags);
+        for(int i = 0; i < 4; i++){
+            buf.putShort((short)counts[i]);
+        }
+        byte[] array = new byte[buf.position()];
+        buf.position(0);
+        buf.get(array);
+        return array;
     }
 
     public String toString(){

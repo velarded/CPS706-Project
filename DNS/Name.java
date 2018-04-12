@@ -1,10 +1,11 @@
 package DNS;
 import java.util.*;
+import java.nio.ByteBuffer;
 
 public class Name{
     public static final int NORMAL = 0;
     public static final int COMPRESSED = 3;
-    private List name;
+    private List<byte[]> name;
     private int size;
     
     public Name(String str){
@@ -68,6 +69,21 @@ public class Name{
             return true;
         }
         return false;
+    }
+
+    public byte[] toByteArray(){
+        ByteBuffer buf = ByteBuffer.allocate(256);
+        for(int i = 0; i < name.size(); i++){
+            byte[] label = name.get(i);
+            buf.put((byte) label.length);
+            buf.put(label);
+        }
+        buf.put((byte)0);
+
+        byte[] array = new byte[buf.position()];
+        buf.position(0);
+        buf.get(array);
+        return array;
     }
 
     public String toString(){
