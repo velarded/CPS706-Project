@@ -1,4 +1,4 @@
-package com.cps706;
+package HisCinema;
 import java.net.*;
 import java.io.*;
 
