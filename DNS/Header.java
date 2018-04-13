@@ -7,7 +7,8 @@ public class Header{
 
     public Header(int id){
         this.id = id;
-        resetFlags();
+        flags = 0x0000;
+        counts = new int[4];
         resetCounts();
     }
 
@@ -43,6 +44,12 @@ public class Header{
 
     public void incCount(int field){
         counts[field]++;
+    }
+
+    public void setFlag(int position, int status){
+        int value = status << 4*position;
+        int mask = 0x0000000F << 4*position;
+        flags = (flags & ~mask) | value;
     }
 
     public void resetFlags(){
