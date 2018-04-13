@@ -1,7 +1,7 @@
 # CPS706-Project
 A simple content distribution application
 
-#Running HisCinema Web Server
+# Running HisCinema Web Server
 
 1. Open cmd and type javac HisCinema/*.java
 
