@@ -10,6 +10,12 @@ public class Header{
         resetFlags();
         resetCounts();
     }
+
+    public Header(Header head){
+        id = head.id;
+        flags = head.flags;
+        counts = head.counts.clone();
+    }
     public Header(DNSParser in){
         id = in.read16b();
         flags = in.read16b();

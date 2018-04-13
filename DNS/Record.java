@@ -5,6 +5,12 @@ public class Record {
     private String value;
     private Type type;
 
+    public Record(Record copy){
+        name = copy.name;
+        value = copy.value;
+        type = copy.type;
+    }
+
     public Record(Name name, String value, Type type){
         this.name = name;
         this.value = value;

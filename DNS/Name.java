@@ -8,6 +8,12 @@ public class Name{
     private List<byte[]> name;
     private int size;
     
+    public Name(Name copy)
+    {
+        this.name = copy.name;
+        this.size = copy.size;
+    }
+
     public Name(String str){
         name = new ArrayList<byte[]>();
         String[] labels = str.split("\\.");
@@ -54,7 +60,10 @@ public class Name{
 
     public Name offset(int offset){
         List<byte[]> temp = new ArrayList<byte[]>(name);
-        temp.subList(0, offset-1).clear();
+        if(offset <= 0){
+            return new Name(temp);            
+        }
+        temp.subList(0, offset).clear();
         return new Name(temp);
     }
 
