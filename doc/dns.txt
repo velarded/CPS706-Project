@@ -1,3 +1,14 @@
+# CPS706 PROJECT DOCUMENTATION
+
+# User Documentation:
+
+# CLIENT
+
+# Structure:
+
+
+
+
 Since the implementation of the CDN is a simple one theres no need to implement the entire DNS.
 Thus the DNS messages that we will use for this project is also simplified.
 
