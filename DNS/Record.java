@@ -26,7 +26,6 @@ public class Record {
             byte[] tmp = new byte[len];
             in.getByteArray(tmp, 0, len);
             value = new String(tmp);
-            System.out.println(value);
         }
         else{
             value = "";
