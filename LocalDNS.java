@@ -5,7 +5,7 @@ public class LocalDNS{
 
     public static void main(String[] args) throws Exception {
         InetAddress ip = InetAddress.getByName("127.0.0.1");
-        DNSServer server = new DNSServer(ip, 53, false);
+        DNSServer server = new DNSServer(ip, 40471, false);
         server.addRecord(new Record(new Name("herCDN.com"), "NSherCDN.com", Type.NS));
         server.addRecord(new Record(new Name("NSherCDN.com"), "127.0.0.3", Type.A));
         server.addRecord(new Record(new Name("hiscinema.com"), "NShiscinema.com", Type.NS));
