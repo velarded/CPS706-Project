@@ -1,10 +1,11 @@
+package client;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
 public class MainConfiguration 
 {
-	public final static String CONFIG_FILE_LOCATION = "resources/config.txt";
+	public final static String CONFIG_FILE_LOCATION = "client/resources/config.txt";
 	public static int hisCinemaServerPort() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);

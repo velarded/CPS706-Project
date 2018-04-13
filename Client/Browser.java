@@ -1,3 +1,5 @@
+package client;
+import DNS.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,81 +17,85 @@ import javax.swing.JTextField;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+//import com.cps706.HisCinemaTCPHandler;
+
 public class Browser extends JFrame{
-    private JTextField urlField;
-    private JEditorPane editorPane;
-    private JPanel panel;
-//    private List<Record> browserRecordTable;
+  private JTextField urlField;
+  private JEditorPane editorPane;
+  private JPanel panel;
+  private DNSClient dnsClient;
+  private List<Record> browserRecordTable;
 
-    public Browser(){
-
-      panel = new JPanel();
+  public Browser() throws Exception{
+    browserRecordTable = new ArrayList<Record>();
+    browserRecordTable.add(new Record(new Name("hiscinema.com"), "127.0.0.5", DNS.Type.A));
+    InetAddress localDNS = InetAddress.getByName(MainConfiguration.localdnsIP());
+    int dnsPort = MainConfiguration.udpPort();
+    dnsClient = new DNSClient(localDNS, dnsPort);
+    panel = new JPanel();
 //      browserRecordTable = new ArrayList<Record>();
-        urlField = new JTextField(35);
-        urlField.addKeyListener(new KeyAdapter(){
-          public void keyReleased(KeyEvent k){
-            if(k.getKeyCode() == KeyEvent.VK_ENTER){
-              try{
-                gotoLocalDNS();
-              }catch(Exception e){
-                e.printStackTrace();
-              }
+      urlField = new JTextField(35);
+      urlField.addKeyListener(new KeyAdapter(){
+        public void keyReleased(KeyEvent k){
+          if(k.getKeyCode() == KeyEvent.VK_ENTER){
+            try{
+              gotoLocalDNS();
+            }catch(Exception e){
+              e.printStackTrace();
             }
           }
-        });
-        editorPane = new JEditorPane();
-        editorPane.setContentType("text/html");
-        editorPane.setEditable(false);
-        panel.add(editorPane);
+        }
+      });
+      editorPane = new JEditorPane();
+      editorPane.setContentType("text/html");
+      editorPane.setEditable(false);
+      panel.add(editorPane);
 
-        getContentPane().setLayout(new BorderLayout());
-        add(urlField, BorderLayout.NORTH);
-        add(editorPane, BorderLayout.CENTER);
-        
-    }
+      getContentPane().setLayout(new BorderLayout());
+      add(urlField, BorderLayout.NORTH);
+      add(editorPane, BorderLayout.CENTER);
+      
+  }
 
-    /*load html to editor pane*/
-    public void load(String html){
-        editorPane.setText(html);
-        
-    }
-    
-    /*add records to the record table*/
+  /*load html to editor pane*/
+  public void load(String html){
+      editorPane.setText(html);
+      
+  }
+  
+  /*add records to the record table*/
 //    public void addRecord(Record record){
 //      browserRecordTable.add(record);
 //    }
-    
-    public void gotoLocalDNS() throws Exception{
-      //Create client UDP socket 
-      DatagramSocket clientSocket = new DatagramSocket();
-      //Assuming that url value will be www.hiscinema.com
-      String url = urlField.getText().replace("www.", "");
-          
-      //Uses local IP address
-      InetAddress ipAddr = InetAddress.getByName(MainConfiguration.localdnsIP());
-      byte[] sendData = new byte[1024];
-      byte[] receiveData = new byte[1024];
-          
-      sendData = url.getBytes();
-      DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length,ipAddr,MainConfiguration.udpPort());
-          
-      System.out.println("Contacting local DNS using UDP to resolve: "+url);
-//      clientSocket.send(sendPacket);
+  
+  public void gotoLocalDNS() throws Exception{
+    //Create client UDP socket 
+    DatagramSocket clientSocket = new DatagramSocket();
+    //Assuming that url value will be www.hiscinema.com
+    String url = urlField.getText().replace("www.", "");
+    String hisCinemaResolvedIP = ""; 
+    for(int i = 0; i < browserRecordTable.size(); i++){
+      Record record = browserRecordTable.get(i);
+      if(record.getName().toString().equals(url)){
+        hisCinemaResolvedIP = record.getValue();
+      }
+    }
 
-      //Receives UDP packet
-//      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-//      clientSocket.receive(receivePacket);
-          
-      //contains IP of hiscinema.com
-//      String modifiedSentence = new String(receivePacket.getData());
-//      System.out.println("FROM SERVER:" + modifiedSentence);
-      clientSocket.close();
-          
-      //getting the IP address of hiscinema.com
-//      Socket TCPclientSocket = new Socket("modifiedSentence",MainConfiguration.hisCinemaServerPort());
-      String hisCinemaResolvedIP = "localhost";
-      URL urlLink = new URL("http://"+hisCinemaResolvedIP+":"+MainConfiguration.hisCinemaServerPort()+"/");
+    if(hisCinemaResolvedIP == null){
+      InetAddress ip = dnsClient.resolve(url, DNS.Type.A);
+      hisCinemaResolvedIP = ip.toString().substring(1);
+    }
+    
+    if(hisCinemaResolvedIP == ""){
+      System.out.println("Unresolved");
+      return;
+    }
+    System.out.println("Contacting local DNS using UDP to resolve: "+url);
+    System.out.println("IP: " + hisCinemaResolvedIP + " " + MainConfiguration.hisCinemaServerPort());
+
+    URL urlLink = new URL("http://"+hisCinemaResolvedIP+":"+MainConfiguration.hisCinemaServerPort()+"/");
     HttpURLConnection con = (HttpURLConnection)urlLink.openConnection();
+    System.out.println(urlLink.toString());
     con.setRequestMethod("GET");
     
     int status = con.getResponseCode();
@@ -112,44 +118,47 @@ public class Browser extends JFrame{
     con.disconnect();
     
       
-      StringBuilder sb = new StringBuilder();
-      File indexHTML = new File ("receivedIndex.html");
-      BufferedReader br = new BufferedReader(new FileReader (indexHTML));
-      String line = null;
-      while((line = br.readLine()) != null)
-      { 
-        sb.append(line);
-      }
-      
-      load(sb.toString());
-      
-      HyperlinkListener listener = new HyperlinkListener(){
-
-      @Override
-      public void hyperlinkUpdate(HyperlinkEvent e) {
-        // TODO Auto-generated method stub
-        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
-          retrieveSelectedVideo(e.getURL().toString());
-        }
-      }
-        
-      };
-      
-      editorPane.addHyperlinkListener(listener);
+    StringBuilder sb = new StringBuilder();
+    File indexHTML = new File ("receivedIndex.html");
+    BufferedReader br = new BufferedReader(new FileReader (indexHTML));
+    String line = null;
+    while((line = br.readLine()) != null)
+    { 
+      sb.append(line);
     }
     
-    //The url parameter will hold the string of format: http://video.hiscinema.com/Fi where i is an integer
-    public void retrieveSelectedVideo(String url)
+    load(sb.toString());
+    
+    HyperlinkListener listener = new HyperlinkListener(){
+
+    @Override
+    public void hyperlinkUpdate(HyperlinkEvent e) {
+      // TODO Auto-generated method stub
+      if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
+        retrieveSelectedVideo(e.getURL().toString());
+      }
+    }
+      
+    };
+    
+    editorPane.addHyperlinkListener(listener);
+  }
+  
+  //The url parameter will hold the string of format: http://video.hiscinema.com/Fi where i is an integer
+  public void retrieveSelectedVideo(String url)
+  {
+    //TODO: insert dns lookup code here
+    System.out.println("RETRIEVE FILE " + url);
+    try
     {
-      //TODO: insert dns lookup code here
-      
-      String resolvedHerCdnIp = "localhost";//Replace this with the result from DNS lookup
-      
+      String hostname = url.substring(7,url.length()-3);
+      System.out.println(hostname);
+      InetAddress ip = dnsClient.resolve(hostname, DNS.Type.V);
+      String resolvedHerCdnIp = ip.toString().substring(1);//Replace this with the result from DNS lookup
+      System.out.println(ip.toString());
       String fileRequested = url.substring(url.length()-2,url.length());
-      try
-      {
-        URL urlLink = new URL("http://"+resolvedHerCdnIp+":"+MainConfiguration.herCinemaServerPort()
-          +"/"+fileRequested);
+      URL urlLink = new URL("http://"+resolvedHerCdnIp+":"+MainConfiguration.herCinemaServerPort()
+        +"/"+fileRequested);
       HttpURLConnection con = (HttpURLConnection)urlLink.openConnection();
       con.setRequestMethod("GET");
       
@@ -172,21 +181,19 @@ public class Browser extends JFrame{
       }
       con.disconnect();
       Desktop.getDesktop().open(new File ("receivedVideo.mp4"));
-      }
-      catch(Exception e)
-      {
-        
-      }
     }
-    
-    public static void main(String[] args){
-        Browser client = new Browser();
-        
-        client.setTitle("Client Application");
-        client.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        client.setSize( 900, 500 );
-        client.setVisible( true );
+    catch(Exception e)
+    {
+      e.printStackTrace();
     }
-
-    
+  }
+  
+  public static void main(String[] args) throws Exception{
+      Browser client = new Browser();
+      
+      client.setTitle("Client Application");
+      client.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+      client.setSize( 900, 500 );
+      client.setVisible( true );
+  } 
 }
