@@ -40,6 +40,10 @@ public class DNSServer{
             System.out.println(message.toString());
 
             DNSMessage response = lookup(message);
+
+            response.getHeader().setFlag(3, 1);
+            if(auth)
+                response.getHeader().setFlag(2, 1);
             
             System.out.println(response.toString());
 

@@ -8,6 +8,14 @@ public class DNSMessage{
     private Header header;
     private ArrayList[] sections;
 
+    public DNSMessage(int id){
+        header = new Header(id);
+        sections = new ArrayList[4];
+        for(int i = 0; i < 4; i++){
+            ArrayList<Record> entries = new ArrayList<Record>();
+            sections[i] = entries;
+        }
+    }
     
     public DNSMessage(DNSMessage message){
         header = new Header(message.getHeader());
