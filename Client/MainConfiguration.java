@@ -40,6 +40,24 @@ public class MainConfiguration
 		
 		return herCinemaServerPort;
 	}
+
+	public static int udpPort() 
+	{
+		File configFile = new File(CONFIG_FILE_LOCATION);
+		Properties properties = new Properties();
+		int udpPort=0;
+		try
+		{
+			properties.load(new FileInputStream(configFile));
+			udpPort = Integer.parseInt(properties.getProperty("udpPort"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return udpPort;
+	}
 	
 	public static String localdnsIP() 
 	{

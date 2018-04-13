@@ -1,10 +1,10 @@
 # CPS706-Project
 A simple content distribution application
 
-# Running HerCDN Content Server
+# Running Application Client
 
-1. Open cmd and cd into HerCDN folder 
+1. Open cmd and cd into Client folder 
 
 2. Type javac *.java
 
-3. Run by using the command: java HerCDNHTTPServer
+3. Run by using the command: java Browser
