@@ -1,7 +1,7 @@
 # CPS706-Project
 A simple content distribution application
 
-Running HerCDN Content Server
+# Running HerCDN Content Server
 
 1. Open cmd and type javac HerCDN/*.java
 
