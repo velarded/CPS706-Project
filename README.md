@@ -1,7 +1,12 @@
 # CPS706-Project
 A simple content distribution application
 
-(This is temp)
+# Running Application Client
+
+1. Open cmd and cd into Client folder 
+2. Type javac *.java
+3. Run by using the command: java Browser
+
 ## To run and test local DNS
 1. Open cmd and type *javac DNS/\*.java*
 2. Type *javac LocalDNS.java*
