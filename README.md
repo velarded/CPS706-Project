@@ -1,6 +1,12 @@
 # CPS706-Project
 A simple content distribution application
 
+# Running HisCinema Web Server
+
+1. Open cmd and cd into the HisCinema folder
+2. Type javac *.java
+3. Run by using the command: java HisCinemaHttpServer
+
 # Running Application Client
 
 1. Open cmd and cd into Client folder 
@@ -15,3 +21,4 @@ A simple content distribution application
 5. (optional) Within client.py there are different queries you can make, feel free to remove or comment out specific queries.
 
 NOTE: Multithreading have not been implemented yet
+
