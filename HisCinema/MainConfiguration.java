@@ -1,10 +1,12 @@
+package HisCinema;
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.InetAddress;
 import java.util.Properties;
 
 public class MainConfiguration 
 {
-	public final static String CONFIG_FILE_LOCATION = "resources/config.txt";
+	public final static String CONFIG_FILE_LOCATION = "HisCinema/resources/config.txt";
 	public static int hisCinemaServerPort() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);
@@ -22,40 +24,22 @@ public class MainConfiguration
 		
 		return hisCinemaServerPort;
 	}
-	
-	public static int herCinemaServerPort() 
+
+	public static InetAddress hisCinemaIP() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);
 		Properties properties = new Properties();
-		int herCinemaServerPort=0;
+		String hisCinemaIP = "";
 		try
 		{
 			properties.load(new FileInputStream(configFile));
-			herCinemaServerPort = Integer.parseInt(properties.getProperty("HerCinemaServerPort"));
+			hisCinemaIP = properties.getProperty("HisCinemaIP");
+			return InetAddress.getByName(hisCinemaIP);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		
-		return herCinemaServerPort;
-	}
-	
-	public static String localdnsIP() 
-	{
-		File configFile = new File(CONFIG_FILE_LOCATION);
-		Properties properties = new Properties();
-		String localdns="";
-		try
-		{
-			properties.load(new FileInputStream(configFile));
-			localdns =properties.getProperty("localdnsIP ");
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return localdns;
+		return null;
 	}
 }

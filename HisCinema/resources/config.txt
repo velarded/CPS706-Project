@@ -1,3 +1,2 @@
 HisCinemaServerPort = 40470
-HerCinemaServerPort = 40472
-localdnsIP = localhost
+HisCinemaIP = 127.0.0.5
