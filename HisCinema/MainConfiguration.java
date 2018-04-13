@@ -5,10 +5,6 @@ import java.util.Properties;
 public class MainConfiguration 
 {
 	public final static String CONFIG_FILE_LOCATION = "resources/config.txt";
-	
-	public MainConfiguration()
-	{}
-	
 	public static int hisCinemaServerPort() 
 	{
 		File configFile = new File(CONFIG_FILE_LOCATION);
@@ -25,42 +21,6 @@ public class MainConfiguration
 		}
 		
 		return hisCinemaServerPort;
-	}
-	
-	public static String hisCinemaIP() 
-	{
-		File configFile = new File(CONFIG_FILE_LOCATION);
-		Properties properties = new Properties();
-		String hisCinemaIP=null;
-		try
-		{
-			properties.load(new FileInputStream(configFile));
-			hisCinemaIP = properties.getProperty("ServerTcpPort");
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return hisCinemaIP;
-	}
-	
-	public static int udpPort() 
-	{
-		File configFile = new File(CONFIG_FILE_LOCATION);
-		Properties properties = new Properties();
-		int udpPort=0;
-		try
-		{
-			properties.load(new FileInputStream(configFile));
-			udpPort = Integer.parseInt(properties.getProperty("UdpPort"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return udpPort;
 	}
 	
 	public static int herCinemaServerPort() 
