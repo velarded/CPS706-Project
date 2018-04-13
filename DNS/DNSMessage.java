@@ -6,12 +6,21 @@ import java.nio.ByteBuffer;
 public class DNSMessage{
     private DNSParser parser;
     private Header header;
-    private List<Record>[] sections;
+    private ArrayList[] sections;
 
-
+    
     public DNSMessage(DNSMessage message){
-        this.header = message.getHeader();
-        this.sections = message.getSections(); 
+        header = new Header(message.getHeader());
+        sections = new ArrayList[4];
+        
+        for(int i = 0; i < 4; i++){
+            ArrayList<Record> entries = new ArrayList<Record>();
+            ArrayList<Record> records = message.getSection(i);
+            for(int j = 0; j < records.size(); j++){
+                entries.add(new Record(records.get(j)));
+            }
+            sections[i] = entries;
+        }
     }
 
     public DNSMessage(byte[] data){
@@ -23,7 +32,7 @@ public class DNSMessage{
         
         //extract all the resource records and place them in the corresponding sections
         for(int i = 0; i < 4; i++){
-            List entries = new ArrayList<Record>();
+            ArrayList<Record> entries = new ArrayList<Record>();
             for(int j = 0; j < counts[i]; j++){
                 entries.add(new Record(parser, i));
             }
@@ -35,8 +44,12 @@ public class DNSMessage{
         return header;
     }
 
-    public List[] getSections(){
+    public ArrayList[] getSections(){
         return sections;
+    }
+
+    public ArrayList getSection(int field){
+        return sections[field];
     }
 
     public int getCount(int field){
@@ -47,7 +60,18 @@ public class DNSMessage{
         //pratically there should be always 1 question in DNS messages,
         //but theoretically it can have more than 1 or none.
         if(!sections[0].isEmpty()){
-            return sections[0].get(0);
+            return (Record)sections[0].get(0);
+        }
+        return null;
+    }
+
+    public Record getAnswer(Type type){
+        List<Record> ANRecords = sections[1];
+        for (int i = 0; i < ANRecords.size(); i++){
+            Record record = ANRecords.get(i);
+            if(record.getType() == type){
+                return record;
+            }
         }
         return null;
     }
@@ -73,7 +97,9 @@ public class DNSMessage{
     }
 
     public void addRecords(List records, int field){
-        sections[field].addAll(records);
+        for (int i = 0; i < records.size(); i++){
+            addRecord((Record)records.get(i), field);
+        }
     }
 
     public byte[] toByteArray(){
