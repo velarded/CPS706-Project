@@ -1,0 +1,96 @@
+# CPS706 PROJECT DOCUMENTATION
+
+# User Documentation:
+
+# CLIENT
+
+# Structure:
+
+
+
+
+Since the implementation of the CDN is a simple one theres no need to implement the entire DNS.
+Thus the DNS messages that we will use for this project is also simplified.
+
+Structure
+
+	+--+--+--+--+--+--+--+--+
+	|    ID     |   Flags   |
+	+--+--+--+--+--+--+--+--+
+	|  QDCOUNT  |  ANCOUNT  |
+	+--+--+--+--+--+--+--+--+
+	|  NSCOUNT  |  ARCOUNT  |
+	+--+--+--+--+--+--+--+--+
+	|    Question Section   |
+	+--+--+--+--+--+--+--+--+
+	|     Answer Section    |
+	+--+--+--+--+--+--+--+--+
+	| Authoritative Section |
+	+--+--+--+--+--+--+--+--+
+	|  Additional Section   |
+	+--+--+--+--+--+--+--+--+
+	
+	
+ID - a 16 bit (2 octet) value that identifies the DNS message
+
+Flags - a 16 bit value where each 4 bits represents a flag
+
+QDCOUNT - number of questions, usually 1. (Theoretically it is possible to have more that 1 question but it doesn't work in real life)
+
+ANCOUNT - number of answers
+
+NSCOUNT - number of nameservers
+
+ARCOUNT - number of additional records
+
+
+Flags
+
+The 16 bit flag is used to manage 4 different flags mentioned in the textbook.
+Since we are not implementing all the flags mentioned in rfc1035, therefore I assigned 4 bits to 1 flag.
+
+Request/Reply - This flag indicates whether the message is a request(0) or reply(1)
+Authoritative - This flag indicates whether the reply is from a authoritative server
+recursive desired - This flag indicates that the user would like the DNS server to perform recursion if it supports it
+recursive available - The DNS server will set this flag if it supports recursion.
+
+Examples
+
+0x1100 - DNS message is a reply and it came from an authoritative server.
+0x0010 - DNS message is a request and it desires the DNS server to perform recursion if it is supported.
+0x1011 - DNS message is a reply and it return telling the user it supports recursion (This doesn't always mean that recursion was used)
+
+
+Record Format
+
+All the records that we are using will be very similar with the exception of questions where it does not have a data section.
+
+	+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                                               |
+    /                                               /
+    /                      NAME                     /
+    |                                               |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                      TYPE                     |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                   RDLENGTH                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+    /                     RDATA                     /
+    /                                               /
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+
+Type 
+
+For this project we are only going to be dealing with 4 different types.
+
+A - The record provides name to IP mapping where the IP will bein the format of IPV4
+
+NS - The record provides a authoritative DNS server which can be used to resolve question unable to be answered locally.
+
+CN - Provides a canonical hostname
+
+R - This record specifies a redirection that works somewhat similar to CN.
+
+
+	
